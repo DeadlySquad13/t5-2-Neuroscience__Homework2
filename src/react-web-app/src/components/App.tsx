@@ -4,6 +4,26 @@ import { Input, Button } from "@mui/material";
 import cv from "@techstark/opencv-js";
 import { Tensor, InferenceSession } from "onnxruntime-web";
 
+const OFFSET = 8;
+const CLASSES = {
+    '-1': {
+        name: "unknown class",
+        color: "green",
+    },
+    0: {
+        name: "unk.",
+        color: "purple",
+    },
+    1: {
+        name: "man",
+        color: "#1a2edb", // тёмно-синий цвет
+    },
+    2: {
+        name: "woman",
+        color: "red",
+    },
+}
+
 export const App = () => {
     const [file, setFile] = useState<File>();
     const [session, setSession] = useState<InferenceSession>();
@@ -79,10 +99,26 @@ export const App = () => {
             }
 
             boxes.forEach((box) => {
+                if (!ctx) {
+                    return
+                }
+
+                const { classId, probability } = box;
+                let detectedClass = CLASSES['-1']
+
+                if (classId === 0 || classId === 1 || classId === 2) {
+                    detectedClass = CLASSES[classId]
+                }
+
                 const [x1, y1, width, height] = box.bounding;
-                ctx!.strokeStyle = "#1a2edb"; // тёмно-синий цвет
-                ctx!.lineWidth = 5; // толщина линии в 5px
-                ctx!.strokeRect(x1, y1, width, height);
+                ctx.strokeStyle = detectedClass.color;
+                ctx.lineWidth = 5; // толщина линии в 5px
+
+                ctx.strokeRect(x1, y1, width, height);
+
+                ctx.font = "32px serif";
+                ctx.lineWidth = 2; // толщина линии в 5px
+                ctx.strokeText(detectedClass.name, x1+OFFSET, y1+height-OFFSET)
             });
         };
     };
