@@ -1,0 +1,71 @@
+[project]
+name = "t5-2-Neuroscience__Homework2"
+version = "0.1.0"
+description = "Term 5-2 Neuroscience Homework2"
+authors = ["DeadlySquad13 <46250621+DeadlySquad13@users.noreply.github.com>"]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tasks]
+#   `break-system-packages` option is set to mute ArchLinux notifications that we
+# are installing package globally (in reality we aren't, it's just pixi venvs
+# are recognized as global).
+postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check --break-system-packages -e ."
+build = "echo test"
+
+[dependencies]
+python = ">=3.12"
+numpy = ">=1.26.4,<1.27"
+torchvision = ">=0.18.0,<0.19"
+pyyaml = ">=6.0.1,<6.1"
+# pytorch = ">=2.3.0,<2.4"
+tqdm = ">=4.66.4,<4.67"
+pillow = ">=10.3.0,<10.4"
+opencv = ">=4.9.0,<4.10"
+matplotlib = ">=3.8.4,<3.9"
+scipy = ">=1.13.1,<1.14"
+seaborn = ">=0.13.2,<0.14"
+pandas = ">=2.2.2,<2.3"
+scikit-learn = ">=1.5.0,<1.6"
+tensorboard = ">=2.16.2,<2.17"
+# pytorch-cuda = ">=12.4,<13"
+
+[feature.test]
+tasks = { test = "pytest" }
+pypi-dependencies = { t5-2-Neuroscience__Homework2 = { path = "./", editable = true }, pytest = "==6.2.5", pytest-cov = "==2.12.1" }
+
+[feature.lint.tasks]
+lint-check = "flake8 src"
+
+format = "black src"
+format-check = "black --check --diff src"
+
+types-check = "mypy src"
+
+order-imports = "isort src"
+order-imports-check = "isort --check --diff src"
+
+[feature.lint.pypi-dependencies]
+flake8 = "==7.0.0"
+tox = "==3.24.3"
+mypy = "==1.9.0"
+black = "==24.3.0"
+isort = "==5.13.2"
+
+[feature.pre-commit]
+tasks = { pre-commit-check = "pre-commit run --all-files" }
+pypi-dependencies = { t5-2-Neuroscience__Homework2 = { path = "./", editable = true }, pre-commit = "==3.7.0" }
+
+[feature.jupyter.pypi-dependencies]
+notebook = "==7.2.0"
+nbclassic = "==1.0.0"
+jupyter-console = "==6.6.3"
+
+[feature.jupyter-neovim.pypi-dependencies]
+jupynium = "==0.2.2"
+
+[environments]
+default = []
+dev = ["test", "lint", "pre-commit"]
+dev-ju = ["test", "lint", "jupyter", "pre-commit"]
+dev-ju-nvim = ["test", "lint", "jupyter", "jupyter-neovim", "pre-commit"]
