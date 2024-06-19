@@ -117,7 +117,8 @@ export const App = () => {
                 ctx.strokeRect(x1, y1, width, height);
 
                 ctx.font = "32px serif";
-                ctx.lineWidth = 2; // толщина линии в 5px
+                ctx.lineWidth = 2; // толщина линии в 2px
+                ctx.strokeText(String(probability), x1+OFFSET, y1+height-3*OFFSET)
                 ctx.strokeText(detectedClass.name, x1+OFFSET, y1+height-OFFSET)
             });
         };
